@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Questionnaire pré-visite — Vertige | Polyclinique du Centre-ville</title>
+  <!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  INSTRUCTIONS POUR L'AGENCE WEB                                 ║
+  ╠══════════════════════════════════════════════════════════════════╣
+  ║  1. Créer un compte sur https://formspree.io                    ║
+  ║  2. Créer un nouveau "Form" → copier l'identifiant              ║
+  ║  3. Remplacer VOTRE_CODE_ICI par cet identifiant (ligne ~540)   ║
+  ║  4. Remplacer le lien # de la politique de confidentialité      ║
+  ║  NOTE LOI 25 : Formspree = serveurs US. Voir webmaster.         ║
+  ╚══════════════════════════════════════════════════════════════════╝
+  -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f2f7f3; color: #1a1a1a; min-height: 100vh; padding: 1rem; }
+    .page-wrap { position: relative; z-index: 1; }
+    .page-wrap { max-width: 660px; margin: 0 auto; padding: 0.5rem 0 2rem; }
+
+    /* Header */
+    .clinic-header { text-align: center; margin-bottom: 0.5rem; }
+    .clinic-header { text-align: center; margin-bottom: 0.5rem; }
+    .clinic-name { font-size: 15px; font-weight: 600; color: #5a9e5a; letter-spacing: 0.02em; margin-bottom: 4px; }
+    .clinic-header h1 { font-size: 22px; font-weight: 700; color: #111; margin-bottom: 3px; }
+    .clinic-header p { font-size: 14px; color: #666; line-height: 1.5; max-width: 480px; margin: 0 auto; }
+
+    /* Progress */
+    .progress-wrap { background: #fff; border-radius: 14px; padding: 14px 18px; margin-bottom: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: #888; margin-bottom: 8px; }
+    .progress-meta span:last-child { font-weight: 600; color: #3d7a3d; }
+    .progress-track { height: 5px; background: #e8ede9; border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #6aaa6a, #3d7a3d); border-radius: 99px; transition: width 0.4s ease; }
+
+    /* Card / Step */
+    .card { background: #fff; border-radius: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); padding: 1rem 1.25rem 0.75rem; margin-bottom: 0.5rem; }
+    .step { display: none; }
+    .step.active { display: block; animation: fadeUp 0.3s ease; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+    /* Step header */
+    .step-badge { display: inline-block; background: #edf7ed; color: #3d7a3d; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 10px; border-radius: 99px; margin-bottom: 6px; }
+    .step-title { font-size: 19px; font-weight: 700; color: #111; margin-bottom: 3px; }
+    .step-sub { font-size: 14px; color: #777; line-height: 1.5; margin-bottom: 0.75rem; }
+    .step-note { font-size: 13px; color: #888; font-style: italic; background: #f9fbfa; border-left: 3px solid #a8d4a8; padding: 10px 14px; border-radius: 0 10px 10px 0; margin-bottom: 0.75rem; line-height: 1.5; }
+
+    /* Fields */
+    .field { margin-bottom: 0.75rem; }
+    .field > label { display: block; font-size: 14px; font-weight: 600; color: #222; margin-bottom: 6px; line-height: 1.4; }
+    .field .hint { font-size: 12px; color: #999; margin-bottom: 6px; line-height: 1.4; }
+    input[type=text], select, textarea { width: 100%; padding: 10px 14px; border: 1.5px solid #dde; border-radius: 10px; font-size: 15px; color: #111; background: #fff; font-family: inherit; transition: border-color 0.15s; outline: none; }
+    input[type=text]:focus, select:focus, textarea:focus { border-color: #6aaa6a; box-shadow: 0 0 0 3px rgba(29,158,117,0.12); }
+    textarea { resize: vertical; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* Radio / Check */
+    .radio-group, .check-group { display: flex; flex-direction: column; gap: 7px; }
+    .radio-opt, .check-opt { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border: 1.5px solid #e5e8e6; border-radius: 11px; cursor: pointer; transition: background 0.15s, border-color 0.15s; font-size: 14px; color: #333; user-select: none; }
+    .radio-opt:hover, .check-opt:hover { background: #eff7ef; border-color: #a8d4a8; }
+    .radio-opt.selected, .check-opt.selected { background: #edf7ed; border-color: #6aaa6a; color: #2a5c2a; }
+    .r-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #c5cdc9; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: border-color 0.15s, background 0.15s; }
+    .radio-opt.selected .r-dot { border-color: #6aaa6a; background: #6aaa6a; }
+    .r-dot::after { content:''; width:7px; height:7px; border-radius:50%; background:#fff; display:none; }
+    .radio-opt.selected .r-dot::after { display:block; }
+    .c-box { width:18px; height:18px; border-radius:5px; border:2px solid #c5cdc9; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:border-color 0.15s, background 0.15s; }
+    .check-opt.selected .c-box { border-color:#6aaa6a; background:#6aaa6a; }
+    .c-box::after { content:''; width:9px; height:5px; border-left:2px solid #fff; border-bottom:2px solid #fff; transform:rotate(-45deg) translateY(-1px); display:none; }
+    .check-opt.selected .c-box::after { display:block; }
+
+    /* Sub-questions */
+    .sub-q { margin-top: 10px; padding: 12px 14px; background: #f2f9f2; border-left: 3px solid #6aaa6a; border-radius: 0 10px 10px 0; }
+    .sub-q label { font-size: 13px; font-weight: 600; color: #555; margin-bottom: 8px; display: block; }
+    .sub-q .radio-group, .sub-q .check-group { gap: 5px; }
+    .sub-q .radio-opt, .sub-q .check-opt { font-size: 13px; padding: 8px 12px; }
+
+    /* Vertige inline list */
+    .vertige-list { display: flex; flex-direction: column; gap: 6px; }
+    .vertige-item { border: 1.5px solid #e5e8e6; border-radius: 11px; overflow: hidden; }
+    .vertige-item .check-opt { border: none; border-radius: 0; }
+    .vertige-item .vertige-type-block { margin: 0 0 0 24px; border-radius: 0 0 10px 0; border: none; border-top: 1.5px solid #b5cff5; border-left: 3px solid #378add; }
+    .vertige-item .vertige-type-block::before { display: none; }
+    .vertige-item .vertige-type-header { border-radius: 0; }
+    .vertige-type-block { margin-top: 1rem; margin-left: 24px; border: 1.5px solid #b5cff5; border-radius: 14px; overflow: hidden; position: relative; }
+    .vertige-type-block::before { content: ''; position: absolute; left: -18px; top: 20px; width: 14px; height: 2px; background: #378add; border-radius: 2px; }
+    .vertige-type-header { background: #deedf9; padding: 10px 14px; font-size: 13px; font-weight: 600; color: #0c447c; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #b5cff5; }
+    .vertige-type-header::before { content: '↳'; font-size: 14px; color: #378add; }
+    .vertige-type-body { padding: 14px; display: flex; flex-direction: column; gap: 1rem; background: #f2f9f2; }
+    .vertige-type-body .field { margin-bottom: 0; }
+    .vertige-type-body .radio-opt { background: #fff; border-color: #ccdff5; }
+    .vertige-type-body .radio-opt:hover { background: #eaf3fb; border-color: #85b7eb; }
+    .vertige-type-body .radio-opt.selected { background: #deedf9; border-color: #378add; color: #0c447c; }
+    .vertige-type-body .radio-opt.selected .r-dot { border-color: #378add; background: #378add; }
+    .vertige-type-body .check-opt { background: #fff; border-color: #ccdff5; }
+    .vertige-type-body .check-opt:hover { background: #eaf3fb; border-color: #85b7eb; }
+    .vertige-type-body .check-opt.selected { background: #deedf9; border-color: #378add; color: #0c447c; }
+    .vertige-type-body .check-opt.selected .c-box { border-color: #378add; background: #378add; }
+
+    /* Autre text field */
+    .autre-field { margin-top: 8px; display: none; }
+    .autre-field input { font-size: 14px; }
+
+    /* Surgery items with year */
+    .chir-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+    .chir-item { border: 1.5px solid #e5e8e6; border-radius: 11px; overflow: hidden; }
+    .chir-item .check-opt { border: none; border-radius: 0; }
+    .chir-item .check-opt.selected { border-radius: 0; }
+    .chir-year { padding: 0 12px 10px 44px; background: #edf7ed; }
+    .chir-year input { font-size: 13px; max-width: 220px; padding: 7px 12px; border-color: #a8d4a8; }
+
+    /* Divider */
+    .divider { border: none; border-top: 1px solid #f0f0f0; margin: 1rem 0; }
+
+    /* Navigation */
+    .nav-wrap { display: flex; gap: 10px; margin-top: 1rem; }
+    .btn-back { padding: 12px 22px; border: 1.5px solid #dde; border-radius: 11px; background: #fff; color: #666; font-size: 15px; font-family: inherit; cursor: pointer; transition: background 0.15s; flex-shrink: 0; }
+    .btn-back:hover { background: #f5f5f5; }
+    .btn-next { flex: 1; padding: 13px 22px; border: none; border-radius: 11px; background: #6aaa6a; color: #fff; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background 0.15s; }
+    .btn-next:hover { background: #3d7a3d; }
+    .btn-next:active { transform: scale(0.98); }
+
+    /* Blocage symptôme */
+    .blocked-msg { background: #fff8e1; border: 1.5px solid #f5c842; border-radius: 14px; padding: 1.5rem; text-align: center; margin-top: 1rem; }
+    .blocked-msg h3 { font-size: 17px; font-weight: 700; color: #7a5c00; margin-bottom: 8px; }
+    .blocked-msg p { font-size: 14px; color: #7a5c00; line-height: 1.6; }
+    .blocked-msg a { color: #3d7a3d; font-weight: 600; }
+
+    /* Sending / Success / Error */
+    .sending-state { text-align: center; padding: 2.5rem 1rem; }
+    .spinner { width: 40px; height: 40px; border: 3px solid #edf7ed; border-top-color: #6aaa6a; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .sending-state p { font-size: 14px; color: #777; }
+    .success-state { text-align: center; padding: 0.75rem 0; }
+    .check-circle { width: 64px; height: 64px; border-radius: 50%; background: #edf7ed; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; }
+    .check-circle svg { width: 28px; height: 28px; stroke: #3d7a3d; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .success-state h2 { font-size: 20px; font-weight: 700; color: #111; margin-bottom: 8px; }
+    .success-state p { font-size: 14px; color: #666; line-height: 1.6; max-width: 420px; margin: 0 auto; }
+    .success-detail { background: #f2f9f2; border: 1px solid #b8dfc3; border-radius: 12px; padding: 14px 16px; margin-top: 1.25rem; text-align: left; }
+    .success-detail p { font-size: 13px; color: #555; margin: 0; line-height: 1.5; }
+    .success-detail p + p { margin-top: 6px; }
+    .success-detail strong { color: #2a5c2a; }
+    .error-state { background: #fff5f5; border: 1px solid #f0c0c0; border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1rem; }
+    .error-state p { font-size: 13px; color: #a32d2d; line-height: 1.5; }
+    .btn-retry { margin-top: 10px; padding: 10px 20px; border: 1.5px solid #f0c0c0; border-radius: 10px; background: #fff; color: #a32d2d; font-size: 14px; font-family: inherit; cursor: pointer; }
+
+    /* Résumé de révision */
+    .review-section { margin-bottom: 8px; border: 1px solid #b8dfc3; border-radius: 12px; overflow: hidden; }
+    .review-section-title { background: #edf7ed; padding: 8px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #3d7a3d; display: flex; align-items: center; justify-content: space-between; }
+    .review-edit-btn { font-size: 11px; font-weight: 500; color: #6aaa6a; background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; text-decoration: underline; }
+    .review-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; padding: 8px 14px; border-top: 1px solid #e8f3e8; font-size: 13px; }
+    .review-row .rl { color: #777; flex-shrink: 0; min-width: 120px; }
+    .review-row .rv { color: #111; text-align: right; font-weight: 500; }
+    .review-row .rv.empty { color: #bbb; font-weight: 400; font-style: italic; }
+    .review-na { padding: 8px 14px; font-size: 13px; color: #aaa; font-style: italic; border-top: 1px solid #e8f3e8; }
+    .privacy-note a { color: #6aaa6a; text-decoration: none; }
+
+    @media (max-width: 480px) {
+      .card { padding: 1.25rem 1rem; }
+      .row2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div class="clinic-header">
+    <img src="data:image/jpeg;base64,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" alt="Polyclinique du Centre-Ville" style="height:140px;width:auto;margin-bottom:0.75rem;border-radius:10px;" />
+    <h1>Questionnaire pré-visite</h1>
+    <p>Complétez ce formulaire avant votre première consultation. Vos réponses aideront le médecin à mieux préparer votre visite.</p>
+    <div style="margin-top:1rem;padding:14px 16px;background:#f2f9f4;border:1px solid #b8dfc3;border-radius:12px;font-size:13px;color:#444;line-height:1.6;text-align:left;max-width:520px;margin-left:auto;margin-right:auto;">Ce questionnaire a été conçu pour permettre à votre médecin de mieux comprendre votre situation avant votre visite, et ainsi vous offrir un suivi personnalisé et attentif. <strong style="color:#3d7a3d">Il ne se substitue pas à votre consultation en personne</strong> — votre examen clinique reste indispensable et aucun diagnostic ne pourra être établi sans celui-ci.</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="step-label">Section 1 sur 8</span>
+      <span id="step-pct">12 %</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="prog" style="width:12%"></div>
+    </div>
+  </div>
+
+  <!-- ═══ ÉTAPE 1 : Confirmation symptôme principal ═══ -->
+  <div class="card step active" id="step-1">
+    <span class="step-badge">Section 1 / 8</span>
+    <div class="step-title">Confirmation du motif de consultation</div>
+    <div class="step-sub">Avant de commencer, nous devons confirmer que ce formulaire correspond bien à votre situation.</div>
+    <div class="field">
+      <label>Confirmez-vous que votre symptôme principal de consultation est le <strong>vertige</strong> et/ou l'<strong>étourdissement</strong> ?</label>
+      <div class="radio-group" id="confirm-grp">
+        <div class="radio-opt" data-val="Oui" onclick="pick('confirm',this); onConfirm(true)"><div class="r-dot"></div> Oui, c'est bien pour ça que je consulte</div>
+        <div class="radio-opt" data-val="Non" onclick="pick('confirm',this); onConfirm(false)"><div class="r-dot"></div> Non, j'ai un autre motif de consultation</div>
+      </div>
+    </div>
+
+    <div id="confirm-blocked" style="display:none">
+      <div class="blocked-msg">
+        <h3>Ce formulaire ne correspond pas à votre consultation</h3>
+        <p>Ce questionnaire est spécifiquement conçu pour les patients consultant pour vertige ou étourdissement.<br><br>
+        Veuillez contacter la clinique directement :<br>
+        📞 <a href="tel:+1514000000">514 000-0000</a> &nbsp;|&nbsp;
+        ✉️ <a href="mailto:info@polycliniquecentreville.ca">info@polycliniquecentreville.ca</a></p>
+      </div>
+    </div>
+
+    <div class="nav-wrap">
+      <button class="btn-next" id="btn-confirm-next" onclick="go(2)" style="display:none">Continuer →</button>
+    </div>
+  </div>
+
+  <!-- ═══ ÉTAPE 2 : Informations générales ═══ -->
+  <div class="card step" id="step-2">
+    <span class="step-badge">Section 2 / 8</span>
+    <div class="step-title">Informations générales</div>
+    <div class="step-sub">Ces informations permettent à votre médecin de contextualiser votre dossier.</div>
+
+    <div class="field">
+      <label>Âge</label>
+      <input type="text" id="age" placeholder="ex. 45" style="max-width:160px" />
+    </div>
+
+    <div class="field">
+      <label>Sexe</label>
+      <div class="radio-group" id="sexe-grp">
+        <div class="radio-opt" data-val="Féminin" onclick="pick('sexe',this)"><div class="r-dot"></div> Féminin</div>
+        <div class="radio-opt" data-val="Masculin" onclick="pick('sexe',this)"><div class="r-dot"></div> Masculin</div>
+        <div class="radio-opt" data-val="Autre / préfère ne pas préciser" onclick="pick('sexe',this)"><div class="r-dot"></div> Autre / préfère ne pas préciser</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Quelle est votre occupation ou profession ?</label>
+      <input type="text" id="profession" placeholder="ex. enseignant, retraité, entretien ménager…" />
+    </div>
+    <div class="field">
+      <label>Avez-vous déjà subi une chirurgie de l'oreille ?</label>
+      <div class="radio-group" id="chir-grp">
+        <div class="radio-opt" data-val="Non" onclick="pick('chir',this)"><div class="r-dot"></div> Non, jamais</div>
+        <div class="radio-opt" data-val="Oui" onclick="pick('chir',this)"><div class="r-dot"></div> Oui</div>
+      </div>
+      <div id="chir-sub" class="sub-q" style="display:none">
+        <label>Type(s) de chirurgie : <em style="font-weight:400;color:#888">(cochez et indiquez l'année)</em></label>
+        <div class="chir-list" id="chir-type-grp">
+
+          <div class="chir-item">
+            <div class="check-opt" data-val="Pose de tubes de ventilation" onclick="chkChir(this)"><div class="c-box"></div> Pose de tubes de ventilation <em style="font-weight:400;color:#777">(aérateurs transtympaniques)</em></div>
+            <div class="chir-year" style="display:none"><input type="text" placeholder="En quelle année ? ex. 2018" /></div>
+          </div>
+
+          <div class="chir-item">
+            <div class="check-opt" data-val="Myringoplastie" onclick="chkChir(this)"><div class="c-box"></div> Myringoplastie <em style="font-weight:400;color:#777">(réparation du tympan)</em></div>
+            <div class="chir-year" style="display:none"><input type="text" placeholder="En quelle année ? ex. 2019" /></div>
+          </div>
+
+          <div class="chir-item">
+            <div class="check-opt" data-val="Tympanoplastie ou masto-tympanoplastie" onclick="chkChir(this)"><div class="c-box"></div> Tympanoplastie ou masto-tympanoplastie <em style="font-weight:400;color:#777">(pour un trou dans le tympan)</em></div>
+            <div class="chir-year" style="display:none"><input type="text" placeholder="En quelle année ? ex. 2020" /></div>
+          </div>
+
+          <div class="chir-item">
+            <div class="check-opt" data-val="Stapédectomie / stapédotomie" onclick="chkChir(this)"><div class="c-box"></div> Stapédectomie / stapédotomie</div>
+            <div class="chir-year" style="display:none"><input type="text" placeholder="En quelle année ? ex. 2017" /></div>
+          </div>
+
+          <div class="chir-item">
+            <div class="check-opt" data-val="Mastoïdectomie" onclick="chkChir(this)"><div class="c-box"></div> Mastoïdectomie</div>
+            <div class="chir-year" style="display:none"><input type="text" placeholder="En quelle année ? ex. 2015" /></div>
+          </div>
+
+          <div class="chir-item">
+            <div class="check-opt" data-val="Chirurgie de cholestéatome" onclick="chkChir(this)"><div class="c-box"></div> Chirurgie de cholestéatome <em style="font-weight:400;color:#777">(un kyste dans l'oreille)</em></div>
+            <div class="chir-year" style="display:none"><input type="text" placeholder="En quelle année ? ex. 2016" /></div>
+          </div>
+
+          <div class="chir-item">
+            <div class="check-opt" data-val="Autre chirurgie ORL" onclick="chkChir(this); toggleAutre('chir-autre-field')"><div class="c-box"></div> Autre <em style="font-weight:400;color:#777">(implant, schwannome vestibulaire…)</em></div>
+            <div class="chir-year" style="display:none"><input type="text" placeholder="En quelle année ? ex. 2021" /></div>
+          </div>
+
+        </div>
+        <div class="autre-field" id="chir-autre-field">
+          <input type="text" id="chir-autre-txt" placeholder="Précisez le type de chirurgie…" />
+        </div>
+      </div>
+    </div>
+    <div class="nav-wrap">
+      <button class="btn-back" onclick="go(1)">← Retour</button>
+      <button class="btn-next" onclick="go(3)">Suivant →</button>
+    </div>
+  </div>
+
+  <!-- ═══ ÉTAPE 3 : Symptômes ORL ═══ -->
+  <div class="card step" id="step-3">
+    <span class="step-badge">Section 3 / 8</span>
+    <div class="step-title">Symptômes de l'oreille et de l'audition</div>
+    <div class="step-note">(Ne vous inquiétez pas — on va vous poser toutes les questions sur votre vertige dans la prochaine section. Mais d'abord, on aimerait savoir si vous avez d'autres symptômes liés à l'oreille ou à l'audition.)</div>
+    <div class="field">
+      <label>Avez-vous des difficultés à entendre (perte auditive) ?</label>
+      <div class="radio-group" id="hypo-grp">
+        <div class="radio-opt" data-val="Non" onclick="pick('hypo',this)"><div class="r-dot"></div> Non</div>
+        <div class="radio-opt" data-val="Oui" onclick="pick('hypo',this)"><div class="r-dot"></div> Oui</div>
+      </div>
+      <div id="hypo-sub" class="sub-q" style="display:none">
+        <label>Depuis quand et de quel côté ?</label>
+        <div class="row2">
+          <select id="hypo-cote"><option value="">Côté…</option><option>Gauche</option><option>Droite</option><option>Les deux</option></select>
+          <input type="text" id="hypo-depuis" placeholder="ex. été 2021" />
+        </div>
+        <label style="margin-top:10px;display:block">Évolution :</label>
+        <div class="radio-group" style="margin-top:6px" id="hypo-evol-grp">
+          <div class="radio-opt" data-val="Stable" onclick="pick('hypo-evol',this)"><div class="r-dot"></div> Stable</div>
+          <div class="radio-opt" data-val="Progressive (s'empire)" onclick="pick('hypo-evol',this)"><div class="r-dot"></div> Progressive (s'empire avec le temps)</div>
+          <div class="radio-opt" data-val="Variable (par épisodes)" onclick="pick('hypo-evol',this)"><div class="r-dot"></div> Variable (par épisodes)</div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Avez-vous des acouphènes (bourdonnements ou sifflements dans les oreilles) ?</label>
+      <div class="radio-group" id="acou-grp">
+        <div class="radio-opt" data-val="Non" onclick="pick('acou',this)"><div class="r-dot"></div> Non</div>
+        <div class="radio-opt" data-val="Oui" onclick="pick('acou',this)"><div class="r-dot"></div> Oui</div>
+      </div>
+      <div id="acou-sub" class="sub-q" style="display:none">
+        <label>De quel côté ?</label>
+        <select id="acou-cote"><option value="">Côté…</option><option>Gauche</option><option>Droite</option><option>Les deux</option></select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Ressentez-vous une douleur à l'oreille (otalgie) ?</label>
+      <div class="radio-group" id="otal-grp">
+        <div class="radio-opt" data-val="Non" onclick="pick('otal',this)"><div class="r-dot"></div> Non</div>
+        <div class="radio-opt" data-val="Oui" onclick="pick('otal',this)"><div class="r-dot"></div> Oui</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Avez-vous des écoulements de l'oreille (otorrhée) ?</label>
+      <div class="radio-group" id="otor-grp">
+        <div class="radio-opt" data-val="Non" onclick="pick('otor',this)"><div class="r-dot"></div> Non</div>
+        <div class="radio-opt" data-val="Oui" onclick="pick('otor',this)"><div class="r-dot"></div> Oui</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Ressentez-vous une sensation de pression ou de plénitude dans l'oreille ?</label>
+      <div class="radio-group" id="plen-grp">
+        <div class="radio-opt" data-val="Non" onclick="pick('plen',this)"><div class="r-dot"></div> Non</div>
+        <div class="radio-opt" data-val="Oui" onclick="pick('plen',this)"><div class="r-dot"></div> Oui</div>
+      </div>
+    </div>
+    <div class="nav-wrap">
+      <button class="btn-back" onclick="go(2)">← Retour</button>
+      <button class="btn-next" onclick="go(4)">Suivant →</button>
+    </div>
+  </div>
+
+  <!-- ═══ ÉTAPE 4 : Description du vertige ═══ -->
+  <div class="card step" id="step-4">
+    <span class="step-badge">Section 4 / 8</span>
+    <div class="step-title">Votre vertige</div>
+    <div class="step-sub">Décrivez au mieux vos étourdissements — il n'y a pas de mauvaise réponse ! Si vous en avez plusieurs types, cochez tout ce qui s'applique.</div>
+
+    <div class="field">
+      <label>Quelle(s) sensation(s) ressentez-vous ? <em style="font-weight:400;color:#888">(plusieurs choix possibles — des questions s'ouvriront pour chaque case cochée)</em></label>
+
+      <div class="vertige-list">
+
+        <!-- Rotatoire -->
+        <div class="vertige-item">
+          <div class="check-opt" data-val="Rotatoire" onclick="chkType(this,'rotatoire')"><div class="c-box"></div> Sensation que tout tourne <em style="font-weight:400;color:#777">(comme après un manège)</em></div>
+          <div id="block-rotatoire" class="vertige-type-block" style="display:none">
+            <div class="vertige-type-header">Vertige rotatoire — quelques précisions</div>
+            <div class="vertige-type-body">
+              <div class="field">
+                <label>Combien de temps dure un épisode ?</label>
+                <div class="radio-group" id="dur-rotatoire-grp">
+                  <div class="radio-opt" data-val="Quelques secondes" onclick="pick('dur-rotatoire',this)"><div class="r-dot"></div> Quelques secondes (moins d'une minute)</div>
+                  <div class="radio-opt" data-val="Quelques minutes" onclick="pick('dur-rotatoire',this)"><div class="r-dot"></div> Quelques minutes</div>
+                  <div class="radio-opt" data-val="Plusieurs heures" onclick="pick('dur-rotatoire',this)"><div class="r-dot"></div> Plusieurs heures</div>
+                  <div class="radio-opt" data-val="Jours ou continu" onclick="pick('dur-rotatoire',this)"><div class="r-dot"></div> Des jours ou continu</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Qu'est-ce qui le déclenche ? <em style="font-weight:400;color:#888">(plusieurs choix)</em></label>
+                <div class="check-group" id="decl-rotatoire-grp">
+                  <div class="check-opt" data-val="Changement de position de la tête" onclick="chk(this)"><div class="c-box"></div> Changement de position de la tête</div>
+                  <div class="check-opt" data-val="Se lever ou s'allonger" onclick="chk(this)"><div class="c-box"></div> Se lever ou s'allonger</div>
+                  <div class="check-opt" data-val="Se retourner dans le lit" onclick="chk(this)"><div class="c-box"></div> Se retourner dans le lit</div>
+                  <div class="check-opt" data-val="Spontané (sans raison)" onclick="chk(this)"><div class="c-box"></div> Spontané, sans raison évidente</div>
+                  <div class="check-opt" data-val="Autre déclencheur rotatoire" onclick="chk(this); toggleAutre('autre-decl-rotatoire-field')"><div class="c-box"></div> Autre</div>
+                </div>
+                <div class="autre-field" id="autre-decl-rotatoire-field">
+                  <input type="text" id="autre-decl-rotatoire-txt" placeholder="Précisez le déclencheur…" />
+                </div>
+              </div>
+              <div class="field">
+                <label>Depuis quand ?</label>
+                <input type="text" id="depuis-rotatoire" placeholder="ex. mai 2021, l'an dernier…" />
+              </div>
+              <div class="field">
+                <label>Dernier épisode ?</label>
+                <input type="text" id="dernier-rotatoire" placeholder="ex. hier soir, ce matin…" />
+              </div>
+              <div class="field">
+                <label>Fréquence ?</label>
+                <div class="radio-group" id="freq-rotatoire-grp">
+                  <div class="radio-opt" data-val="Quotidien" onclick="pick('freq-rotatoire',this)"><div class="r-dot"></div> Quotidien</div>
+                  <div class="radio-opt" data-val="Plusieurs fois/semaine" onclick="pick('freq-rotatoire',this)"><div class="r-dot"></div> Plusieurs fois par semaine</div>
+                  <div class="radio-opt" data-val="Quelques fois/mois" onclick="pick('freq-rotatoire',this)"><div class="r-dot"></div> Quelques fois par mois</div>
+                  <div class="radio-opt" data-val="Variable" onclick="pick('freq-rotatoire',this)"><div class="r-dot"></div> Variable / imprévisible</div>
+                  <div class="radio-opt" data-val="Rarement" onclick="pick('freq-rotatoire',this)"><div class="r-dot"></div> Rarement</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tangage -->
+        <div class="vertige-item">
+          <div class="check-opt" data-val="Tangage" onclick="chkType(this,'tangage')"><div class="c-box"></div> Tangage <em style="font-weight:400;color:#777">(sensation de bateau ou de vagues)</em></div>
+          <div id="block-tangage" class="vertige-type-block" style="display:none">
+            <div class="vertige-type-header">Tangage — quelques précisions</div>
+            <div class="vertige-type-body">
+              <div class="field">
+                <label>Combien de temps dure la sensation ?</label>
+                <div class="radio-group" id="dur-tangage-grp">
+                  <div class="radio-opt" data-val="Quelques secondes" onclick="pick('dur-tangage',this)"><div class="r-dot"></div> Quelques secondes</div>
+                  <div class="radio-opt" data-val="Quelques minutes" onclick="pick('dur-tangage',this)"><div class="r-dot"></div> Quelques minutes</div>
+                  <div class="radio-opt" data-val="Plusieurs heures" onclick="pick('dur-tangage',this)"><div class="r-dot"></div> Plusieurs heures</div>
+                  <div class="radio-opt" data-val="Persistant / quasi-continu" onclick="pick('dur-tangage',this)"><div class="r-dot"></div> Persistant / quasi-continu</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Qu'est-ce qui le déclenche ou l'aggrave ? <em style="font-weight:400;color:#888">(plusieurs choix)</em></label>
+                <div class="check-group" id="decl-tangage-grp">
+                  <div class="check-opt" data-val="Être debout ou en mouvement" onclick="chk(this)"><div class="c-box"></div> Être debout ou en mouvement</div>
+                  <div class="check-opt" data-val="Marcher" onclick="chk(this)"><div class="c-box"></div> Marcher</div>
+                  <div class="check-opt" data-val="Environnement visuel complexe (foule, supermarché)" onclick="chk(this)"><div class="c-box"></div> Environnement visuel complexe (foule, supermarché)</div>
+                  <div class="check-opt" data-val="Spontané / permanent" onclick="chk(this)"><div class="c-box"></div> Spontané / permanent</div>
+                  <div class="check-opt" data-val="Autre déclencheur tangage" onclick="chk(this); toggleAutre('autre-decl-tangage-field')"><div class="c-box"></div> Autre</div>
+                </div>
+                <div class="autre-field" id="autre-decl-tangage-field">
+                  <input type="text" id="autre-decl-tangage-txt" placeholder="Précisez le déclencheur…" />
+                </div>
+              </div>
+              <div class="field">
+                <label>Depuis quand ?</label>
+                <input type="text" id="depuis-tangage" placeholder="ex. depuis 6 mois, depuis 2022…" />
+              </div>
+              <div class="field">
+                <label>Ça s'améliore quand vous êtes assis ou allongé ?</label>
+                <div class="radio-group" id="tangage-repos-grp">
+                  <div class="radio-opt" data-val="Oui, s'améliore au repos" onclick="pick('tangage-repos',this)"><div class="r-dot"></div> Oui, ça s'améliore au repos</div>
+                  <div class="radio-opt" data-val="Non, présent même au repos" onclick="pick('tangage-repos',this)"><div class="r-dot"></div> Non, présent même au repos</div>
+                  <div class="radio-opt" data-val="Variable" onclick="pick('tangage-repos',this)"><div class="r-dot"></div> Variable</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Instabilité -->
+        <div class="vertige-item">
+          <div class="check-opt" data-val="Instabilité" onclick="chkType(this,'instabilite')"><div class="c-box"></div> Instabilité, déséquilibre en marchant</div>
+          <div id="block-instabilite" class="vertige-type-block" style="display:none">
+            <div class="vertige-type-header">Instabilité — quelques précisions</div>
+            <div class="vertige-type-body">
+              <div class="field">
+                <label>L'instabilité est-elle… ?</label>
+                <div class="radio-group" id="dur-instabilite-grp">
+                  <div class="radio-opt" data-val="Seulement en marchant" onclick="pick('dur-instabilite',this)"><div class="r-dot"></div> Présente seulement en marchant</div>
+                  <div class="radio-opt" data-val="En marchant et debout" onclick="pick('dur-instabilite',this)"><div class="r-dot"></div> Présente en marchant et debout</div>
+                  <div class="radio-opt" data-val="Constante" onclick="pick('dur-instabilite',this)"><div class="r-dot"></div> Constante (même assis)</div>
+                  <div class="radio-opt" data-val="Par épisodes" onclick="pick('dur-instabilite',this)"><div class="r-dot"></div> Par épisodes</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Qu'est-ce qui l'aggrave ? <em style="font-weight:400;color:#888">(plusieurs choix)</em></label>
+                <div class="check-group" id="decl-instabilite-grp">
+                  <div class="check-opt" data-val="Marcher" onclick="chk(this)"><div class="c-box"></div> Marcher</div>
+                  <div class="check-opt" data-val="Se lever" onclick="chk(this)"><div class="c-box"></div> Se lever</div>
+                  <div class="check-opt" data-val="Fermer les yeux" onclick="chk(this)"><div class="c-box"></div> Fermer les yeux (sous la douche, etc.)</div>
+                  <div class="check-opt" data-val="Foule ou environnement complexe" onclick="chk(this)"><div class="c-box"></div> Foule ou environnement visuel complexe</div>
+                  <div class="check-opt" data-val="Obscurité" onclick="chk(this)"><div class="c-box"></div> Obscurité</div>
+                  <div class="check-opt" data-val="Autre déclencheur instabilité" onclick="chk(this); toggleAutre('autre-decl-instabilite-field')"><div class="c-box"></div> Autre</div>
+                </div>
+                <div class="autre-field" id="autre-decl-instabilite-field">
+                  <input type="text" id="autre-decl-instabilite-txt" placeholder="Précisez…" />
+                </div>
+              </div>
+              <div class="field">
+                <label>Avez-vous eu des chutes ou quasi-chutes ?</label>
+                <div class="radio-group" id="chute-grp">
+                  <div class="radio-opt" data-val="Non" onclick="pick('chute',this)"><div class="r-dot"></div> Non</div>
+                  <div class="radio-opt" data-val="Quasi-chutes seulement" onclick="pick('chute',this)"><div class="r-dot"></div> Quelques quasi-chutes</div>
+                  <div class="radio-opt" data-val="Oui, chutes réelles" onclick="pick('chute',this)"><div class="r-dot"></div> Oui, des chutes réelles</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Depuis quand ?</label>
+                <input type="text" id="depuis-instabilite" placeholder="ex. depuis 3 mois…" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Étourdissement -->
+        <div class="vertige-item">
+          <div class="check-opt" data-val="Étourdissement" onclick="chkType(this,'etourdissement')"><div class="c-box"></div> Étourdissement / tête légère</div>
+          <div id="block-etourdissement" class="vertige-type-block" style="display:none">
+            <div class="vertige-type-header">Étourdissement — quelques précisions</div>
+            <div class="vertige-type-body">
+              <div class="field">
+                <label>Combien de temps dure l'étourdissement ?</label>
+                <div class="radio-group" id="dur-etourdissement-grp">
+                  <div class="radio-opt" data-val="Quelques secondes" onclick="pick('dur-etourdissement',this)"><div class="r-dot"></div> Quelques secondes</div>
+                  <div class="radio-opt" data-val="Quelques minutes" onclick="pick('dur-etourdissement',this)"><div class="r-dot"></div> Quelques minutes</div>
+                  <div class="radio-opt" data-val="Plusieurs heures" onclick="pick('dur-etourdissement',this)"><div class="r-dot"></div> Plusieurs heures</div>
+                  <div class="radio-opt" data-val="Quasi-constant" onclick="pick('dur-etourdissement',this)"><div class="r-dot"></div> Quasi-constant</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Qu'est-ce qui le déclenche ou l'aggrave ? <em style="font-weight:400;color:#888">(plusieurs choix)</em></label>
+                <div class="check-group" id="decl-etourdissement-grp">
+                  <div class="check-opt" data-val="Se lever rapidement" onclick="chk(this)"><div class="c-box"></div> Se lever rapidement</div>
+                  <div class="check-opt" data-val="Chaleur" onclick="chk(this)"><div class="c-box"></div> Chaleur</div>
+                  <div class="check-opt" data-val="Stress ou anxiété" onclick="chk(this)"><div class="c-box"></div> Stress ou anxiété</div>
+                  <div class="check-opt" data-val="Effort physique" onclick="chk(this)"><div class="c-box"></div> Effort physique</div>
+                  <div class="check-opt" data-val="Spontané" onclick="chk(this)"><div class="c-box"></div> Spontané, sans raison</div>
+                  <div class="check-opt" data-val="Autre déclencheur étourdissement" onclick="chk(this); toggleAutre('autre-decl-etourdissement-field')"><div class="c-box"></div> Autre</div>
+                </div>
+                <div class="autre-field" id="autre-decl-etourdissement-field">
+                  <input type="text" id="autre-decl-etourdissement-txt" placeholder="Précisez…" />
+                </div>
+              </div>
+              <div class="field">
+                <label>Avez-vous une sensation de faiblesse ou d'évanouissement imminent ?</label>
+                <div class="radio-group" id="syncope-grp">
+                  <div class="radio-opt" data-val="Non" onclick="pick('syncope',this)"><div class="r-dot"></div> Non</div>
+                  <div class="radio-opt" data-val="Oui" onclick="pick('syncope',this)"><div class="r-dot"></div> Oui, parfois</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Depuis quand ?</label>
+                <input type="text" id="depuis-etourdissement" placeholder="ex. depuis 1 an…" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Autre -->
+        <div class="vertige-item">
+          <div class="check-opt" data-val="Autre type" onclick="chkType(this,'autre-type')"><div class="c-box"></div> Autre</div>
+          <div class="autre-field" id="autre-type-field" style="padding: 8px 14px 10px; background:#edf7ed; margin-top:0;">
+            <input type="text" id="autre-type-txt" placeholder="Décrivez votre sensation…" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="field" style="margin-top:1.25rem">
+      <label>Y a-t-il des nausées associées à vos épisodes ?</label>
+      <div class="radio-group" id="naus-grp">
+        <div class="radio-opt" data-val="Non" onclick="pick('naus',this)"><div class="r-dot"></div> Non</div>
+        <div class="radio-opt" data-val="Oui" onclick="pick('naus',this)"><div class="r-dot"></div> Oui</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Avez-vous eu des vomissements lors des épisodes ?</label>
+      <div class="radio-group" id="vom-grp">
+        <div class="radio-opt" data-val="Non" onclick="pick('vom',this)"><div class="r-dot"></div> Non</div>
+        <div class="radio-opt" data-val="Oui" onclick="pick('vom',this)"><div class="r-dot"></div> Oui</div>
+      </div>
+    </div>
+
+    <div class="nav-wrap">
+      <button class="btn-back" onclick="go(3)">← Retour</button>
+      <button class="btn-next" onclick="go(5)">Suivant →</button>
+    </div>
+  </div>
+
+  <!-- ═══ ÉTAPE 5 : Cou & trauma ═══ -->
+  <div class="card step" id="step-5">
+    <span class="step-badge">Section 5 / 8</span>
+    <div class="step-title">Cou et antécédents traumatiques</div>
+    <div class="step-sub">Ces informations aident à identifier une possible cause cervicale à vos symptômes.</div>
+    <div class="field">
+      <label>Ressentez-vous des douleurs ou raideurs au cou ?</label>
+      <div class="radio-group" id="cou-grp">
+        <div class="radio-opt" data-val="Non" onclick="pick('cou',this)"><div class="r-dot"></div> Non</div>
+        <div class="radio-opt" data-val="Oui — légères" onclick="pick('cou',this)"><div class="r-dot"></div> Oui, légères</div>
+        <div class="radio-opt" data-val="Oui — modérées" onclick="pick('cou',this)"><div class="r-dot"></div> Oui, modérées</div>
+        <div class="radio-opt" data-val="Oui — importantes / sévères" onclick="pick('cou',this)"><div class="r-dot"></div> Oui, importantes / sévères</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Avez-vous subi un accident, une chute, ou un coup au cou ou à la tête (whiplash, trauma) ?</label>
+      <div class="radio-group" id="trauma-grp">
+        <div class="radio-opt" data-val="Non" onclick="pick('trauma',this)"><div class="r-dot"></div> Non</div>
+        <div class="radio-opt" data-val="Oui" onclick="pick('trauma',this)"><div class="r-dot"></div> Oui</div>
+      </div>
+      <div id="trauma-sub" class="sub-q" style="display:none">
+        <label>Précisez :</label>
+        <input type="text" id="trauma-txt" placeholder="ex. accident de voiture 2019, chute en vélo…" />
+      </div>
+    </div>
+    <div class="nav-wrap">
+      <button class="btn-back" onclick="go(4)">← Retour</button>
+      <button class="btn-next" onclick="go(6)">Suivant →</button>
+    </div>
+  </div>
+
+  <!-- ═══ ÉTAPE 6 : Maux de tête / Migraine ═══ -->
+  <div class="card step" id="step-6">
+    <span class="step-badge">Section 6 / 8</span>
+    <div class="step-title">Maux de tête et migraine</div>
+    <div class="step-sub">Ces questions aident à évaluer si vos vertiges pourraient être liés à des migraines.</div>
+    <div class="field">
+      <label>Avez-vous des maux de tête (céphalées) ?</label>
+      <div class="radio-group" id="ceph-grp">
+        <div class="radio-opt" data-val="Non" onclick="pick('ceph',this); toggleMigraine(false)"><div class="r-dot"></div> Non / rarement</div>
+        <div class="radio-opt" data-val="Oui" onclick="pick('ceph',this); toggleMigraine(true)"><div class="r-dot"></div> Oui</div>
+      </div>
+    </div>
+    <div id="migraine-block" style="display:none">
+      <div class="divider"></div>
+      <div class="field">
+        <label>Où se situe la douleur ?</label>
+        <div class="radio-group" id="cloc-grp">
+          <div class="radio-opt" data-val="Unilatéral gauche" onclick="pick('cloc',this)"><div class="r-dot"></div> D'un seul côté (gauche)</div>
+          <div class="radio-opt" data-val="Unilatéral droit" onclick="pick('cloc',this)"><div class="r-dot"></div> D'un seul côté (droit)</div>
+          <div class="radio-opt" data-val="Bilatéral" onclick="pick('cloc',this)"><div class="r-dot"></div> Les deux côtés</div>
+          <div class="radio-opt" data-val="Variable" onclick="pick('cloc',this)"><div class="r-dot"></div> Variable</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Nature de la douleur ?</label>
+        <div class="radio-group" id="ctype-grp">
+          <div class="radio-opt" data-val="Pulsatile" onclick="pick('ctype',this)"><div class="r-dot"></div> Pulsatile (comme un battement)</div>
+          <div class="radio-opt" data-val="Pression / étau" onclick="pick('ctype',this)"><div class="r-dot"></div> Pression / étau</div>
+          <div class="radio-opt" data-val="Autre nature" onclick="pick('ctype',this)"><div class="r-dot"></div> Autre</div>
+        </div>
+        <div class="autre-field" id="autre-ctype-field" style="display:none">
+          <input type="text" id="autre-ctype-txt" placeholder="Décrivez la nature de la douleur…" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Intensité habituelle ?</label>
+        <div class="radio-group" id="cint-grp">
+          <div class="radio-opt" data-val="Légère" onclick="pick('cint',this)"><div class="r-dot"></div> Légère (je continue à fonctionner)</div>
+          <div class="radio-opt" data-val="Modérée à sévère" onclick="pick('cint',this)"><div class="r-dot"></div> Modérée à sévère (difficile de fonctionner)</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Durée habituelle d'un épisode ?</label>
+        <div class="radio-group" id="cdur-grp">
+          <div class="radio-opt" data-val="Moins de 5 min" onclick="pick('cdur',this)"><div class="r-dot"></div> Moins de 5 minutes</div>
+          <div class="radio-opt" data-val="5 min à 1h" onclick="pick('cdur',this)"><div class="r-dot"></div> 5 minutes à 1 heure</div>
+          <div class="radio-opt" data-val="1h à 3 jours" onclick="pick('cdur',this)"><div class="r-dot"></div> 1 heure à 3 jours</div>
+          <div class="radio-opt" data-val="Plus de 3 jours" onclick="pick('cdur',this)"><div class="r-dot"></div> Plus de 3 jours</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Lors de vos maux de tête… <em style="font-weight:400;color:#888">(plusieurs choix possibles)</em></label>
+        <div class="check-group" id="cassoc-grp">
+          <div class="check-opt" data-val="Photophobie" onclick="chk(this)"><div class="c-box"></div> Sensibilité à la lumière (photophobie)</div>
+          <div class="check-opt" data-val="Phonophobie" onclick="chk(this)"><div class="c-box"></div> Sensibilité aux sons (phonophobie)</div>
+          <div class="check-opt" data-val="Aggravé par activité physique" onclick="chk(this)"><div class="c-box"></div> Aggravé par les activités physiques</div>
+          <div class="check-opt" data-val="Nausées / vomissements" onclick="chk(this)"><div class="c-box"></div> Nausées / vomissements</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Avez-vous déjà eu des troubles visuels <em>avant</em> le mal de tête (aura) ?</label>
+        <div class="hint">ex. lumières clignotantes, points aveugles, zigzags</div>
+        <div class="radio-group" id="aura-grp">
+          <div class="radio-opt" data-val="Non" onclick="pick('aura',this)"><div class="r-dot"></div> Non</div>
+          <div class="radio-opt" data-val="Oui" onclick="pick('aura',this)"><div class="r-dot"></div> Oui</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Vos vertiges arrivent-ils souvent en même temps que vos maux de tête ?</label>
+        <div class="radio-group" id="vceph-grp">
+          <div class="radio-opt" data-val="Presque toujours ensemble" onclick="pick('vceph',this)"><div class="r-dot"></div> Presque toujours ensemble</div>
+          <div class="radio-opt" data-val="Parfois ensemble" onclick="pick('vceph',this)"><div class="r-dot"></div> Parfois ensemble</div>
+          <div class="radio-opt" data-val="Indépendants" onclick="pick('vceph',this)"><div class="r-dot"></div> Non, indépendants</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Quelqu'un dans votre famille souffre-t-il de migraines ?</label>
+        <div class="radio-group" id="atcd-grp">
+          <div class="radio-opt" data-val="Non / inconnu" onclick="pick('atcd',this)"><div class="r-dot"></div> Non / je ne sais pas</div>
+          <div class="radio-opt" data-val="Oui" onclick="pick('atcd',this)"><div class="r-dot"></div> Oui</div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-wrap">
+      <button class="btn-back" onclick="go(5)">← Retour</button>
+      <button class="btn-next" onclick="go(7); buildReview()">Vérifier mes réponses →</button>
+    </div>
+  </div>
+
+  <!-- ═══ ÉTAPE 7 : Révision avant envoi ═══ -->
+  <div class="card step" id="step-7">
+    <span class="step-badge">Vérification</span>
+    <div class="step-title">Vérifiez vos réponses</div>
+    <div class="step-sub">Prenez un moment pour relire vos informations. Vous pouvez revenir en arrière à tout moment pour les modifier.</div>
+    <div id="review-out"></div>
+    <div class="nav-wrap" style="margin-top:1rem">
+      <button class="btn-back" onclick="go(6)">← Modifier</button>
+      <button class="btn-next" onclick="submitForm()">Confirmer et envoyer ✓</button>
+    </div>
+  </div>
+
+  <!-- ═══ ÉTAPE 8 : Confirmation envoi ═══ -->
+  <div class="card step" id="step-8">
+    <div id="state-sending" class="sending-state" style="display:none">
+      <div class="spinner"></div>
+      <p>Envoi en cours…</p>
+    </div>
+    <div id="state-success" style="display:none">
+      <div class="success-state">
+        <div class="check-circle">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2>Formulaire envoyé — Merci !</h2>
+        <p>Vos réponses ont été transmises à l'équipe clinique. Le médecin les consultera avant votre visite.</p>
+        <div class="success-detail">
+          <p>🕐 <strong>À apporter à votre rendez-vous :</strong> votre carte d'assurance maladie (RAMQ) et une liste de vos médicaments actuels.</p>
+          <p>📞 <strong>Pour annuler ou modifier votre rendez-vous :</strong> contactez la clinique directement.</p>
+        </div>
+      </div>
+    </div>
+    <div id="state-error" style="display:none">
+      <div class="success-state">
+        <h2 style="color:#a32d2d">Une erreur est survenue</h2>
+        <p>Vos réponses n'ont pas pu être envoyées. Veuillez réessayer ou contacter la clinique.</p>
+      </div>
+      <div class="error-state">
+        <p id="error-msg">Vérifiez votre connexion internet et réessayez.</p>
+        <button class="btn-retry" onclick="retrySubmit()">Réessayer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="privacy-note">
+    Vos informations sont confidentielles et utilisées uniquement dans le cadre de votre suivi médical.<br>
+    <a href="#">Politique de confidentialité</a>
+  </div>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   ✏️  REMPLACER VOTRE_CODE_ICI
+   ══════════════════════════════════════════ */
+// FormSubmit — pas besoin de compte
+
+const TOTAL = 8;
+let cur = 1;
+
+/* ─── Navigation ─── */
+function go(n) {
+  document.getElementById('step-' + cur).classList.remove('active');
+  cur = n;
+  document.getElementById('step-' + cur).classList.add('active');
+  const pct = Math.round((cur / TOTAL) * 100);
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('step-pct').textContent = pct + ' %';
+  document.getElementById('step-label').textContent = 'Section ' + cur + ' sur ' + TOTAL;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ─── Confirmation symptôme ─── */
+function onConfirm(oui) {
+  document.getElementById('confirm-blocked').style.display = oui ? 'none' : 'block';
+  document.getElementById('btn-confirm-next').style.display = oui ? 'block' : 'none';
+}
+
+/* ─── Radio ─── */
+function pick(name, el) {
+  document.querySelectorAll('#' + name + '-grp .radio-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  if (name === 'chir')   show('chir-sub',   el.dataset.val === 'Oui');
+  if (name === 'hypo')   show('hypo-sub',   el.dataset.val === 'Oui');
+  if (name === 'acou')   show('acou-sub',   el.dataset.val === 'Oui');
+  if (name === 'trauma') show('trauma-sub', el.dataset.val === 'Oui');
+  if (name === 'ctype')  show('autre-ctype-field', el.dataset.val === 'Autre nature');
+}
+
+/* ─── Checkbox chirurgie avec année ─── */
+function chkChir(el) {
+  el.classList.toggle('selected');
+  const yearDiv = el.nextElementSibling;
+  if (yearDiv && yearDiv.classList.contains('chir-year')) {
+    yearDiv.style.display = el.classList.contains('selected') ? 'block' : 'none';
+    if (!el.classList.contains('selected')) yearDiv.querySelector('input').value = '';
+  }
+}
+
+/* ─── Checkbox générique ─── */
+function chk(el) { el.classList.toggle('selected'); }
+
+/* ─── Checkbox type vertige (avec bloc dynamique inline) ─── */
+function chkType(el, type) {
+  el.classList.toggle('selected');
+  const selected = el.classList.contains('selected');
+  if (type === 'autre-type') {
+    show('autre-type-field', selected);
+  } else {
+    show('block-' + type, selected);
+  }
+}
+
+/* ─── Autre champ conditionnel ─── */
+function toggleAutre(fieldId) {
+  const parent = document.getElementById(fieldId);
+  const checkEl = parent.previousElementSibling
+    ? parent.closest('.check-group, .field')?.querySelector('.check-opt[onclick*="' + fieldId + '"]')
+    : null;
+  parent.style.display = parent.style.display === 'none' ? 'block' : 'none';
+}
+
+/* ─── Migraine block ─── */
+function toggleMigraine(v) { show('migraine-block', v); }
+
+/* ─── Helpers ─── */
+function show(id, v) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = v ? 'block' : 'none';
+}
+function radioVal(grp) {
+  const el = document.querySelector('#' + grp + ' .radio-opt.selected');
+  return el ? el.dataset.val : '—';
+}
+function checkVals(grp) {
+  const els = document.querySelectorAll('#' + grp + ' .check-opt.selected');
+  return els.length ? Array.from(els).map(e => e.dataset.val).join(', ') : '—';
+}
+function inp(id) {
+  const el = document.getElementById(id);
+  return el && el.value.trim() ? el.value.trim() : '—';
+}
+
+function collectChirurgies() {
+  const items = document.querySelectorAll('#chir-type-grp .chir-item');
+  const results = [];
+  items.forEach(item => {
+    const opt = item.querySelector('.check-opt');
+    if (opt && opt.classList.contains('selected')) {
+      const yearInput = item.querySelector('.chir-year input');
+      const year = yearInput && yearInput.value.trim() ? yearInput.value.trim() : '?';
+      let label = opt.dataset.val;
+      if (label === 'Autre chirurgie ORL') {
+        const autreTxt = inp('chir-autre-txt');
+        label = 'Autre' + (autreTxt !== '—' ? ' (' + autreTxt + ')' : '');
+      }
+      results.push(label + ' — ' + year);
+    }
+  });
+  return results.length ? results.join(' | ') : '—';
+}
+
+/* ─── Construire la révision lisible ─── */
+function buildReview() {
+  const hasCeph = radioVal('ceph-grp') === 'Oui';
+  const hasChir = radioVal('chir-grp') === 'Oui';
+  const types = Array.from(document.querySelectorAll('.vertige-list .check-opt.selected')).map(e => e.dataset.val);
+
+  function section(title, stepNum, rows) {
+    const rowsHtml = rows.map(([l, v]) => {
+      if (v === null) return '';
+      const isEmpty = !v || v === '—';
+      return `<div class="review-row"><span class="rl">${l}</span><span class="rv ${isEmpty ? 'empty' : ''}">${isEmpty ? 'Non renseigné' : v}</span></div>`;
+    }).filter(Boolean).join('');
+    return `<div class="review-section">
+      <div class="review-section-title">${title} <button class="review-edit-btn" onclick="go(${stepNum})">✏️ Modifier</button></div>
+      ${rowsHtml}
+    </div>`;
+  }
+
+  let html = '';
+
+  html += section('Motif de consultation', 1, [
+    ['Motif confirmé', radioVal('confirm-grp')],
+  ]);
+
+  html += section('Informations générales', 2, [
+    ['Âge', inp('age')],
+    ['Sexe', radioVal('sexe-grp')],
+    ['Profession', inp('profession')],
+    ['Chirurgie ORL', radioVal('chir-grp')],
+    hasChir ? ['Type(s)', collectChirurgies()] : null,
+  ].filter(Boolean));
+
+  html += section('Symptômes ORL', 3, [
+    ['Perte auditive', radioVal('hypo-grp') + (radioVal('hypo-grp') === 'Oui' ? ' — ' + [inp('hypo-cote'), inp('hypo-depuis'), radioVal('hypo-evol-grp')].filter(v => v !== '—').join(', ') : '')],
+    ['Acouphènes', radioVal('acou-grp') + (radioVal('acou-grp') === 'Oui' ? ' — ' + inp('acou-cote') : '')],
+    ['Otalgie', radioVal('otal-grp')],
+    ['Otorrhée', radioVal('otor-grp')],
+    ['Plénitude', radioVal('plen-grp')],
+  ]);
+
+  const typeLabel = types.length ? types.join(', ') : '—';
+  html += section('Type de vertige', 4, [
+    ['Sensation(s)', typeLabel],
+    types.includes('Rotatoire') ? ['Rotatoire — durée', radioVal('dur-rotatoire-grp')] : null,
+    types.includes('Rotatoire') ? ['Rotatoire — depuis', inp('depuis-rotatoire')] : null,
+    types.includes('Rotatoire') ? ['Rotatoire — fréquence', radioVal('freq-rotatoire-grp')] : null,
+    types.includes('Tangage') ? ['Tangage — durée', radioVal('dur-tangage-grp')] : null,
+    types.includes('Tangage') ? ['Tangage — depuis', inp('depuis-tangage')] : null,
+    types.includes('Instabilité') ? ['Instabilité — profil', radioVal('dur-instabilite-grp')] : null,
+    types.includes('Instabilité') ? ['Chutes', radioVal('chute-grp')] : null,
+    types.includes('Étourdissement') ? ['Étourdissement — durée', radioVal('dur-etourdissement-grp')] : null,
+    ['Nausées', radioVal('naus-grp')],
+    ['Vomissements', radioVal('vom-grp')],
+  ].filter(Boolean));
+
+  html += section('Cou & traumatismes', 5, [
+    ['Douleur cervicale', radioVal('cou-grp')],
+    ['Trauma cou/tête', radioVal('trauma-grp') + (radioVal('trauma-grp') === 'Oui' ? ' — ' + inp('trauma-txt') : '')],
+  ]);
+
+  html += section('Céphalées / Migraine', 6, hasCeph ? [
+    ['Localisation', radioVal('cloc-grp')],
+    ['Type', radioVal('ctype-grp')],
+    ['Intensité', radioVal('cint-grp')],
+    ['Durée', radioVal('cdur-grp')],
+    ['Aura visuelle', radioVal('aura-grp')],
+    ['Lien vertiges–céphalée', radioVal('vceph-grp')],
+    ['ATCD familial', radioVal('atcd-grp')],
+  ] : [['', 'Non applicable']]);
+
+  html += section('Nez, sinus & gorge', 7, [
+    ['Nez / sinus', checkVals('nez-grp')],
+    ['Gorge / voix', checkVals('gorge-grp')],
+    ['Notes libres', inp('notes')],
+  ]);
+
+  document.getElementById('review-out').innerHTML = html;
+}
+
+/* ─── Collecte des données ─── */
+function collectData() {
+  const hasCeph = radioVal('ceph-grp') === 'Oui';
+  const types = [];
+  document.querySelectorAll('.vertige-list .check-opt.selected').forEach(e => types.push(e.dataset.val));
+
+  const d = {
+    'INFORMATIONS GÉNÉRALES': '',
+    'Âge': inp('age'),
+    'Sexe': radioVal('sexe-grp'),
+    'Profession': inp('profession'),
+    'Chirurgie otologique': radioVal('chir-grp'),
+    'Type(s) de chirurgie': radioVal('chir-grp') === 'Oui' ? collectChirurgies() : '—',
+
+    'SYMPTÔMES ORL': '',
+    'Perte auditive': radioVal('hypo-grp'),
+    'Perte auditive — côté': inp('hypo-cote'),
+    'Perte auditive — depuis': inp('hypo-depuis'),
+    'Perte auditive — évolution': radioVal('hypo-evol-grp'),
+    'Acouphènes': radioVal('acou-grp') + (inp('acou-cote') !== '—' ? ' — ' + inp('acou-cote') : ''),
+    'Otalgie': radioVal('otal-grp'),
+    'Otorrhée': radioVal('otor-grp'),
+    'Plénitude auriculaire': radioVal('plen-grp'),
+
+    'VERTIGE — TYPES': types.join(', ') || '—',
+    'Autre type (précision)': inp('autre-type-txt'),
+    'Nausées': radioVal('naus-grp'),
+    'Vomissements': radioVal('vom-grp'),
+  };
+
+  if (types.includes('Rotatoire')) {
+    d['ROTATOIRE — Durée'] = radioVal('dur-rotatoire-grp');
+    d['ROTATOIRE — Déclencheurs'] = checkVals('decl-rotatoire-grp') + (inp('autre-decl-rotatoire-txt') !== '—' ? ' / ' + inp('autre-decl-rotatoire-txt') : '');
+    d['ROTATOIRE — Depuis'] = inp('depuis-rotatoire');
+    d['ROTATOIRE — Dernier épisode'] = inp('dernier-rotatoire');
+    d['ROTATOIRE — Fréquence'] = radioVal('freq-rotatoire-grp');
+  }
+  if (types.includes('Tangage')) {
+    d['TANGAGE — Durée'] = radioVal('dur-tangage-grp');
+    d['TANGAGE — Déclencheurs'] = checkVals('decl-tangage-grp') + (inp('autre-decl-tangage-txt') !== '—' ? ' / ' + inp('autre-decl-tangage-txt') : '');
+    d['TANGAGE — Depuis'] = inp('depuis-tangage');
+    d['TANGAGE — Amélioration au repos'] = radioVal('tangage-repos-grp');
+  }
+  if (types.includes('Instabilité')) {
+    d['INSTABILITÉ — Profil'] = radioVal('dur-instabilite-grp');
+    d['INSTABILITÉ — Aggravants'] = checkVals('decl-instabilite-grp') + (inp('autre-decl-instabilite-txt') !== '—' ? ' / ' + inp('autre-decl-instabilite-txt') : '');
+    d['INSTABILITÉ — Chutes'] = radioVal('chute-grp');
+    d['INSTABILITÉ — Depuis'] = inp('depuis-instabilite');
+  }
+  if (types.includes('Étourdissement')) {
+    d['ÉTOURDISSEMENT — Durée'] = radioVal('dur-etourdissement-grp');
+    d['ÉTOURDISSEMENT — Déclencheurs'] = checkVals('decl-etourdissement-grp') + (inp('autre-decl-etourdissement-txt') !== '—' ? ' / ' + inp('autre-decl-etourdissement-txt') : '');
+    d['ÉTOURDISSEMENT — Quasi-syncope'] = radioVal('syncope-grp');
+    d['ÉTOURDISSEMENT — Depuis'] = inp('depuis-etourdissement');
+  }
+
+  d['COU & TRAUMA'] = '';
+  d['Douleur cervicale'] = radioVal('cou-grp');
+  d['Trauma cou / tête'] = radioVal('trauma-grp') + (inp('trauma-txt') !== '—' ? ' — ' + inp('trauma-txt') : '');
+
+  d['CÉPHALÉES / MIGRAINE'] = hasCeph ? '' : 'Non applicable';
+  if (hasCeph) {
+    d['Localisation'] = radioVal('cloc-grp');
+    d['Type douleur'] = radioVal('ctype-grp') + (inp('autre-ctype-txt') !== '—' ? ' — ' + inp('autre-ctype-txt') : '');
+    d['Intensité'] = radioVal('cint-grp');
+    d['Durée céphalée'] = radioVal('cdur-grp');
+    d['Symptômes associés'] = checkVals('cassoc-grp');
+    d['Aura visuelle'] = radioVal('aura-grp');
+    d['Lien vertiges–céphalée'] = radioVal('vceph-grp');
+    d['ATCD familial migraine'] = radioVal('atcd-grp');
+  }
+
+  d['NEZ, SINUS & GORGE'] = '';
+  d['Nez / sinus'] = checkVals('nez-grp') + (inp('autre-nez-txt') !== '—' ? ' / ' + inp('autre-nez-txt') : '');
+  d['Gorge / voix'] = checkVals('gorge-grp') + (inp('autre-gorge-txt') !== '—' ? ' / ' + inp('autre-gorge-txt') : '');
+  d['Notes libres'] = inp('notes');
+  d['Date de soumission'] = new Date().toLocaleString('fr-CA');
+
+  return d;
+}
+
+/* ─── Soumission ─── */
+async function submitForm() {
+  go(8);
+  show('state-sending', true);
+  show('state-success', false);
+  show('state-error', false);
+
+  const data = collectData();
+
+  /* Convertir en FormData pour FormSubmit */
+  const formData = new FormData();
+  for (const [key, val] of Object.entries(data)) {
+    if (val && val !== '') formData.append(key, val);
+  }
+  formData.append('_subject', 'Nouveau questionnaire vertige — Polyclinique du Centre-ville');
+  formData.append('_captcha', 'false');
+  formData.append('_template', 'table');
+
+  try {
+    const res = await fetch('https://formsubmit.co/yassinebalhipro@gmail.com', {
+      method: 'POST',
+      body: formData,
+    });
+    show('state-sending', false);
+    if (res.ok) {
+      show('state-success', true);
+    } else {
+      show('state-error', true);
+      document.getElementById('error-msg').textContent = 'Erreur ' + res.status + '. Veuillez réessayer.';
+    }
+  } catch (e) {
+    show('state-sending', false);
+    show('state-error', true);
+    document.getElementById('error-msg').textContent = 'Impossible de joindre le serveur. Vérifiez votre connexion.';
+  }
+}
+
+function retrySubmit() {
+  show('state-error', false);
+  submitForm();
+}
+</script>
+</body>
+</html>
